@@ -1,0 +1,12 @@
+[package]
+name = "api"
+version = "0.1.0"
+authors = ["Joel Shepherd <joel@swivid.ink>"]
+edition = "2018"
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+sqlx = { git = "https://github.com/launchbadge/sqlx", features = ["sqlite", "macros", "runtime-tokio-native-tls"] }
+tokio = { version = "1.0", features = ["full"] }
+warp = "0.3"
