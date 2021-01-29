@@ -2,10 +2,10 @@ use serde::Serialize;
 
 #[derive(Serialize)]
 pub struct Opinion {
-    id: i64,
-    source_id: i64,
-    position: bool,
-    body: String,
+    pub id: i64,
+    pub source_id: i64,
+    pub position: bool,
+    pub body: String,
 }
 
 /// Find opinions by source
