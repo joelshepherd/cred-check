@@ -7,6 +7,6 @@ edition = "2018"
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-sqlx = { git = "https://github.com/launchbadge/sqlx", features = ["sqlite", "macros", "runtime-tokio-native-tls"] }
+sqlx = { git = "https://github.com/launchbadge/sqlx", features = ["postgres", "macros", "runtime-tokio-native-tls"] }
 tokio = { version = "1.0", features = ["full"] }
 warp = "0.3"

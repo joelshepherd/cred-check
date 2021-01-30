@@ -1,17 +1,23 @@
 use crate::{handler, Db};
-use warp::{any, path, reply, Filter};
+use warp::Filter;
 
 pub fn get(db: Db) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
-    let index = path::end().map(|| reply());
+    let with_db = warp::any().map(move || db.clone());
 
-    let source_find = path("source")
-        .and(path::param())
-        .and(with_db(db.clone()))
+    let index = warp::path::end().map(|| warp::reply());
+
+    let source_find = with_db
+        .clone()
+        .and(warp::path("source"))
+        .and(warp::path::tail())
         .and_then(handler::source::find);
 
-    index.or(source_find)
-}
+    let source_create = with_db
+        .clone()
+        .and(warp::path("source"))
+        .and(warp::post())
+        .and(warp::body::json())
+        .and_then(handler::source::create);
 
-fn with_db(db: Db) -> impl Filter<Extract = (Db,), Error = std::convert::Infallible> + Clone {
-    any().map(move || db.clone())
+    index.or(source_find).or(source_create)
 }

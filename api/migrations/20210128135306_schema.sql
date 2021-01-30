@@ -1,10 +1,10 @@
 create table source (
-  id int primary key not null,
-  url varchar(255) not null
+  id serial primary key,
+  url varchar(255) not null unique
 );
 
 create table opinion (
-  id int primary key not null,
+  id serial primary key ,
   source_id int not null,
   position boolean not null,
   body text not null
