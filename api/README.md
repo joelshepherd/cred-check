@@ -3,6 +3,6 @@
 ## Setup
 
 ```sh
-$ export DATABASE_URL="sqlite:dev.db"`
+$ export DATABASE_URL="postgres:localhost:5432/fact_checker"`
 $ sqlx db setup
 ```
