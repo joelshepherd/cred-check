@@ -1,18 +1,14 @@
-mod context;
-mod database;
-mod filter;
-mod handler;
-mod model;
-
-use context::Context;
-use sqlx::PgPool;
-
-type Db = PgPool;
+use std::env::var;
 
 #[tokio::main]
 async fn main() {
-    let db = database::connect().await;
-    let routes = filter::filters(db);
+    let port = var("PORT")
+        .map(|x| x.parse().expect("Invalid port number supplied"))
+        .unwrap_or(8080);
 
-    warp::serve(routes).run(([127, 0, 0, 1], 8080)).await;
+    println!("Server listening on port {}", &port);
+
+    warp::serve(api::init().await)
+        .run(([127, 0, 0, 1], port))
+        .await;
 }
