@@ -1,4 +1,8 @@
+mod tools;
+
 use api::init;
+use insta::assert_json_snapshot;
+use tools::json_response;
 use warp::http::StatusCode;
 use warp::test::request;
 
@@ -20,9 +24,7 @@ async fn test_find() {
         .await;
 
     assert_eq!(res.status(), StatusCode::OK);
-    assert!(std::str::from_utf8(res.body())
-        .unwrap()
-        .contains("example.com/existing"));
+    assert_json_snapshot!(json_response(res));
 }
 
 #[tokio::test]
@@ -37,4 +39,5 @@ async fn test_create() {
         .await;
 
     assert_eq!(res.status(), StatusCode::CREATED);
+    assert_json_snapshot!(json_response(res));
 }

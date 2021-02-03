@@ -10,3 +10,6 @@ serde_json = "1.0"
 sqlx = { git = "https://github.com/launchbadge/sqlx", features = ["postgres", "macros", "runtime-tokio-native-tls"] }
 tokio = { version = "1.0", features = ["full"] }
 warp = "0.3"
+
+[dev-dependencies]
+insta = "1.5"

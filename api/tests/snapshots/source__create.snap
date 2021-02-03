@@ -1,0 +1,10 @@
+---
+source: tests/source.rs
+expression: json_response(res)
+
+---
+{
+  "id": "[id]",
+  "title": "TODO",
+  "url": "example.com/new"
+}

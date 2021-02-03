@@ -1,0 +1,17 @@
+---
+source: tests/source.rs
+expression: json_response(res)
+
+---
+{
+  "source": {
+    "id": "[id]",
+    "title": "TODO",
+    "url": "example.com/existing"
+  },
+  "opinions": [],
+  "votes": [
+    0,
+    0
+  ]
+}
