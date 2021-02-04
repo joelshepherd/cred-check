@@ -10,21 +10,27 @@ use warp::test::request;
 async fn test_find() {
     let api = init().await;
 
-    // Insert data
-    request()
-        .method("POST")
-        .path("/source")
-        .body(r#"{ "url": "example.com/existing" }"#)
-        .reply(&api)
-        .await;
+    tools::seed_source().await;
 
     let res = request()
-        .path("/source/example.com/existing")
+        .path("/source/example.com/seeded")
         .reply(&api)
         .await;
 
     assert_eq!(res.status(), StatusCode::OK);
     assert_json_snapshot!(json_response(res));
+}
+
+#[tokio::test]
+async fn test_find_not_found() {
+    let api = init().await;
+
+    let res = request()
+        .path("/source/example.com/not_found")
+        .reply(&api)
+        .await;
+
+    assert_eq!(res.status(), StatusCode::NOT_FOUND);
 }
 
 #[tokio::test]

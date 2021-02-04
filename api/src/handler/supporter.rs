@@ -1,6 +1,5 @@
-use crate::{model, Context};
+use crate::{model, Db};
 use serde::Deserialize;
-use warp::{reject, reply};
 
 #[derive(Deserialize)]
 pub struct CreateRequest {
@@ -8,22 +7,22 @@ pub struct CreateRequest {
 }
 
 pub async fn create(
-    context: Context,
+    db: Db,
+    user: model::user::User,
     request: CreateRequest,
 ) -> Result<impl warp::Reply, warp::Rejection> {
     // Validate the opinion exists
-    model::opinion::find(&context.db, request.opinion_id)
-        .await
-        .map_err(|_| reject())?;
+    model::opinion::find(&db, request.opinion_id).await?;
 
-    let input = model::supporter::SupporterInput {
+    let input = model::supporter::CreateSupporter {
         opinion_id: request.opinion_id,
-        user_id: context.user.id,
+        user_id: user.id,
     };
 
-    let supporter = model::supporter::create(&context.db, input)
-        .await
-        .map_err(|_| reject())?;
+    let supporter = model::supporter::create(&db, input).await?;
 
-    Ok(reply::json(&supporter))
+    Ok(warp::reply::with_status(
+        warp::reply::json(&supporter),
+        warp::http::status::StatusCode::CREATED,
+    ))
 }

@@ -1,0 +1,10 @@
+---
+source: tests/user.rs
+expression: json_response(res)
+
+---
+{
+  "id": "[id]",
+  "username": "tester",
+  "name": "Tester"
+}

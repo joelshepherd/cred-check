@@ -1,4 +1,4 @@
-use crate::Db;
+use crate::{error, Db};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize)]
@@ -9,36 +9,42 @@ pub struct Source {
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct SourceInput {
+pub struct CreateSource {
     pub url: String,
 }
 
-/// Search for a source by url
-pub async fn search(db: &Db, url: String) -> Result<Source, sqlx::Error> {
-    sqlx::query_as!(Source, "select * from source where url = $1", url)
+/// Find a source by id
+pub async fn find(db: &Db, id: i32) -> error::Result<Source> {
+    let source = sqlx::query_as!(Source, "select * from source where id = $1", id)
         .fetch_one(db)
-        .await
+        .await?;
+
+    Ok(source)
 }
 
-/// Find a source by id
-pub async fn find(db: &Db, id: i32) -> Result<Source, sqlx::Error> {
-    sqlx::query_as!(Source, "select * from source where id = $1", id)
+/// Search for a source by url
+pub async fn find_by_url(db: &Db, url: String) -> error::Result<Source> {
+    let source = sqlx::query_as!(Source, "select * from source where url = $1", url)
         .fetch_one(db)
-        .await
+        .await?;
+
+    Ok(source)
 }
 
 /// Create a new source
-pub async fn create(db: &Db, input: SourceInput) -> Result<Source, sqlx::Error> {
+pub async fn create(db: &Db, input: CreateSource) -> error::Result<Source> {
     // TODO: parse url and pull title
     let title = "TODO";
     let url = input.url;
 
-    sqlx::query_as!(
+    let source = sqlx::query_as!(
         Source,
         "insert into source (title, url) values ($1, $2) returning *",
         title,
         url
     )
     .fetch_one(db)
-    .await
+    .await?;
+
+    Ok(source)
 }

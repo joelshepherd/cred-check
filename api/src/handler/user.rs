@@ -1,21 +1,19 @@
-use crate::{model, Context};
-use warp::{reject, reply};
+use crate::{model, Db};
 
-pub async fn find(context: Context, id: i32) -> Result<impl warp::Reply, warp::Rejection> {
-    let user = model::user::find(&context.db, id)
-        .await
-        .map_err(|_| reject())?;
+pub async fn find(db: Db, id: i32) -> Result<impl warp::Reply, warp::Rejection> {
+    let user = model::user::find(&db, id).await?;
 
-    Ok(reply::json(&user))
+    Ok(warp::reply::json(&user))
 }
 
 pub async fn create(
-    context: Context,
-    input: model::user::UserInput,
+    db: Db,
+    input: model::user::CreateUser,
 ) -> Result<impl warp::Reply, warp::Rejection> {
-    let user = model::user::create(&context.db, input)
-        .await
-        .map_err(|_| reject())?;
+    let user = model::user::create(&db, input).await?;
 
-    Ok(reply::json(&user))
+    Ok(warp::reply::with_status(
+        warp::reply::json(&user),
+        warp::http::status::StatusCode::CREATED,
+    ))
 }

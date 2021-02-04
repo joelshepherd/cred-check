@@ -1,7 +1,7 @@
 create table "source" (
   id serial primary key,
-  title varchar not null,
-  url varchar not null unique
+  title text not null,
+  url text not null unique
 );
 
 create table "opinion" (
@@ -14,7 +14,8 @@ create table "opinion" (
 
 create table "user" (
   id serial primary key,
-  name varchar not null
+  username text not null unique,
+  name text not null
 );
 
 create table "supporter" (

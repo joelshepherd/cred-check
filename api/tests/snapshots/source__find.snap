@@ -7,11 +7,19 @@ expression: json_response(res)
   "source": {
     "id": "[id]",
     "title": "TODO",
-    "url": "example.com/existing"
+    "url": "example.com/seeded"
   },
-  "opinions": [],
+  "opinions": [
+    {
+      "id": 1,
+      "source_id": 1,
+      "user_id": 1,
+      "position": true,
+      "body": "This opinion is true."
+    }
+  ],
   "votes": [
-    0,
+    1,
     0
   ]
 }
