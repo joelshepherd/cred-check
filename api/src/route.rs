@@ -7,7 +7,7 @@ pub fn init(db: Db) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rej
         .map(warp::reply)
         .or(warp::path("opinion")
             .and(warp::post())
-            .and(with_user(db.clone()))
+            .and(with_db_and_user(db.clone()))
             .and(warp::body::json())
             .and_then(handler::opinion::create))
         .or(warp::path("source").and(
@@ -22,7 +22,7 @@ pub fn init(db: Db) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rej
         ))
         .or(warp::path("supporter").and(
             warp::post()
-                .and(with_user(db.clone()))
+                .and(with_db_and_user(db.clone()))
                 .and(warp::body::json())
                 .and_then(handler::supporter::create),
         ))
@@ -37,13 +37,21 @@ pub fn init(db: Db) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rej
                     .and_then(handler::user::create)),
         ))
         .recover(map_error)
+        .with(
+            warp::cors()
+                .allow_methods(vec!["GET", "POST"])
+                .allow_headers(vec!["authorization", "content-type"])
+                .allow_any_origin()
+                .allow_credentials(true)
+                .build(),
+        )
 }
 
 fn with_db(db: Db) -> impl Filter<Extract = (Db,), Error = std::convert::Infallible> + Clone {
     warp::any().map(move || db.clone())
 }
 
-fn with_user(
+fn with_db_and_user(
     db: Db,
 ) -> impl Filter<Extract = (Db, model::user::User), Error = warp::Rejection> + Clone {
     warp::header("authorization")
@@ -51,6 +59,7 @@ fn with_user(
         .untuple_one()
 }
 
+// Separate function because you cannot async closure in stable yet
 async fn map_user(db: Db, token: String) -> Result<(Db, model::user::User), warp::Rejection> {
     let user = match model::user::find_from_token(&db, token).await {
         Some(user) => user,
@@ -61,6 +70,8 @@ async fn map_user(db: Db, token: String) -> Result<(Db, model::user::User), warp
 }
 
 async fn map_error(err: warp::Rejection) -> Result<impl warp::Reply, warp::Rejection> {
+    println!("{:#?}", err);
+
     if let Some(err) = err.find::<error::Error>() {
         let status = match err {
             error::Error::Internal => warp::http::status::StatusCode::INTERNAL_SERVER_ERROR,
