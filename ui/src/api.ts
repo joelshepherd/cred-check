@@ -1,41 +1,16 @@
+// deno-lint-ignore-file camelcase
 import { Ok, Err, Result } from "./deps.ts";
 
 // Status code for now
 type Error = number;
 type ApiResult<T> = Result<T, Error>;
 
-interface AddOpinionRequest {
+// Opinion
+
+interface CreateOpinion {
   source_id: number;
   position: boolean;
   body: string;
-}
-
-export function addOpinion(
-  input: AddOpinionRequest
-): Promise<ApiResult<Opinion>> {
-  return request("post", "opinion", input);
-}
-
-interface CreateSupporter {
-  opinion_id: number;
-}
-
-interface Supporter {
-  id: number;
-  opinion_id: number;
-  user_id: number;
-}
-
-export function addSupporter(
-  input: CreateSupporter
-): Promise<ApiResult<Supporter>> {
-  return request("post", "supporter", input);
-}
-
-export interface Source {
-  id: number;
-  title: string;
-  url: string;
 }
 
 export interface Opinion {
@@ -46,26 +21,56 @@ export interface Opinion {
   body: string;
 }
 
-export interface FindSource {
+export function createOpinion(
+  input: CreateOpinion
+): Promise<ApiResult<Opinion>> {
+  return request("post", "opinion", input);
+}
+
+// Vote
+
+interface CreateVote {
+  opinion_id: number;
+}
+
+interface Vote {
+  id: number;
+  opinion_id: number;
+  user_id: number;
+}
+
+export function createVote(input: CreateVote): Promise<ApiResult<Vote>> {
+  return request("post", "vote", input);
+}
+
+// Source
+
+export interface Source {
+  id: number;
+  title: string;
+  url: string;
+}
+
+export interface SourceExt {
   source: Source;
   opinions: Opinion[];
   votes: [number, number];
 }
 
-export function findSource(url: string): Promise<ApiResult<FindSource>> {
+export function findSource(url: string): Promise<ApiResult<SourceExt>> {
   return request("get", `source/${url}`);
 }
 
-export function createSource(url: string): Promise<ApiResult<FindSource>> {
+export function createSource(url: string): Promise<ApiResult<SourceExt>> {
   return request("post", `source`, { url });
 }
 
 async function request<T = unknown>(
   method: "get" | "post",
   path: string,
-  data?: object
+  data?: unknown
 ): Promise<ApiResult<T>> {
-  const authorization = localStorage.getItem("token") ?? "";
+  const authorization = window.localStorage.getItem("token") ?? "";
 
   const res = await fetch(`http://localhost:8080/${path}`, {
     method,

@@ -6,6 +6,7 @@ pub struct Source {
     pub id: i32,
     pub title: String,
     pub url: String,
+    pub created_at: chrono::DateTime<chrono::Utc>,
 }
 
 #[derive(Serialize, Deserialize)]

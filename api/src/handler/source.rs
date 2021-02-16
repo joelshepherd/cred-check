@@ -2,10 +2,20 @@ use crate::{model, Db};
 use serde::Serialize;
 
 #[derive(Serialize)]
-struct FindReply {
+struct SourceExt {
     source: model::source::Source,
     opinions: Vec<model::opinion::Opinion>,
     votes: (i64, i64),
+}
+
+impl From<model::source::Source> for SourceExt {
+    fn from(source: model::source::Source) -> Self {
+        Self {
+            source,
+            opinions: Vec::new(),
+            votes: (0, 0),
+        }
+    }
 }
 
 pub async fn find(db: Db, url: warp::path::Tail) -> Result<impl warp::Reply, warp::Rejection> {
@@ -13,21 +23,9 @@ pub async fn find(db: Db, url: warp::path::Tail) -> Result<impl warp::Reply, war
 
     let source = model::source::find_by_url(&db, url).await?;
     let opinions = model::opinion::find_by_source(&db, source.id).await?;
+    let votes = model::vote::count_by_position(&db, source.id).await?;
 
-    let mut votes = (0, 0);
-
-    // TODO: fix n+1 issue
-    for opinion in opinions.iter() {
-        let supporters = model::supporter::count_by_opinion(&db, opinion.id).await?;
-
-        if opinion.position {
-            votes.0 += 1 + supporters;
-        } else {
-            votes.1 += 1 + supporters;
-        }
-    }
-
-    let data = FindReply {
+    let data = SourceExt {
         source,
         opinions,
         votes,
@@ -42,8 +40,10 @@ pub async fn create(
 ) -> Result<impl warp::Reply, warp::Rejection> {
     let source = model::source::create(&db, input).await?;
 
+    let data: SourceExt = source.into();
+
     Ok(warp::reply::with_status(
-        warp::reply::json(&source),
+        warp::reply::json(&data),
         warp::http::status::StatusCode::CREATED,
     ))
 }

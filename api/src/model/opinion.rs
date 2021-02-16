@@ -8,6 +8,7 @@ pub struct Opinion {
     pub user_id: i32,
     pub position: bool,
     pub body: String,
+    pub created_at: chrono::DateTime<chrono::Utc>,
 }
 
 #[derive(Deserialize)]

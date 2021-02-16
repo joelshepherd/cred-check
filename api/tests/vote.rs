@@ -14,7 +14,7 @@ async fn test_create() {
 
     let res = request()
         .method("POST")
-        .path("/supporter")
+        .path("/vote")
         .header("authorization", "seeded")
         .body(r#"{ "opinion_id": 1 }"#)
         .reply(&api)
@@ -33,7 +33,7 @@ async fn test_create_with_no_auth() {
     // No auth header provided
     let res = request()
         .method("POST")
-        .path("/supporter")
+        .path("/vote")
         .body(r#"{ "opinion_id": 1 }"#)
         .reply(&api)
         .await;
@@ -43,7 +43,7 @@ async fn test_create_with_no_auth() {
     // Invalid token provided
     let res = request()
         .method("POST")
-        .path("/supporter")
+        .path("/vote")
         .header("authorization", "invalid_value")
         .body(r#"{ "opinion_id": 1 }"#)
         .reply(&api)

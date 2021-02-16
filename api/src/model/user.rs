@@ -6,6 +6,7 @@ pub struct User {
     pub id: i32,
     pub username: String,
     pub name: String,
+    pub created_at: chrono::DateTime<chrono::Utc>,
 }
 
 #[derive(Deserialize)]

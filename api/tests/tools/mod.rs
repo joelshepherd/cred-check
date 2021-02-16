@@ -1,5 +1,8 @@
 use serde_json::{json, Map, Value};
-use warp::hyper::{body::Bytes, Response};
+use warp::{
+    body::json,
+    hyper::{body::Bytes, Response},
+};
 
 /// Seed a test source with the url `example.com/seeded`
 /// TODO: clippy seems to be flagging incorrectly
@@ -56,24 +59,35 @@ pub async fn seed_opinion() {
 pub fn json_response(response: Response<Bytes>) -> Value {
     match serde_json::from_slice::<Value>(&response.into_body()) {
         Ok(mut value) => {
-            if let Some(map) = value.as_object_mut() {
-                replace_keys(map);
-            }
+            replace_keys(&mut value);
             value
         }
         Err(_) => Value::Null,
     }
 }
 
-fn replace_keys(object: &mut Map<String, Value>) {
-    for (key, value) in object.iter_mut() {
-        match value.as_object_mut() {
-            Some(v) => replace_keys(v),
-            None => {
+fn replace_keys(value: &mut Value) {
+    match value {
+        Value::Array(v) => {
+            for item in v {
+                replace_keys(item);
+            }
+        }
+        Value::Object(v) => {
+            for (key, vv) in v.iter_mut() {
                 if key == "id" {
-                    *value = json!("[id]");
+                    *vv = json!("[id]");
+                }
+                if key == "created_at" {
+                    *vv = json!("[timestamp]");
+                }
+                match &key[..] {
+                    "id" => *vv = json!("[id]"),
+                    "created_at" => *vv = json!("[created_at]"),
+                    _ => replace_keys(vv),
                 }
             }
         }
+        _ => {}
     }
 }

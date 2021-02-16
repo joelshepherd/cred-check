@@ -10,7 +10,7 @@ interface Props {
 }
 
 export default function View(props: Props) {
-  const [state, setState] = React.useState<Option<api.FindSource>>(None);
+  const [state, setState] = React.useState<Option<api.SourceExt>>(None);
 
   React.useEffect(() => {
     props.url.match({
@@ -32,7 +32,7 @@ export default function View(props: Props) {
     state.match({
       some: (state) =>
         api
-          .addOpinion({
+          .createOpinion({
             body,
             position,
             source_id: state.source.id,
@@ -44,6 +44,10 @@ export default function View(props: Props) {
                   Some({
                     ...state,
                     opinions: state.opinions.concat(opinion),
+                    votes: [
+                      state.votes[0] + (opinion.position ? 1 : 0),
+                      state.votes[1] + (opinion.position ? 0 : 1),
+                    ],
                   })
                 ),
               err: () => {},
@@ -52,8 +56,8 @@ export default function View(props: Props) {
       none: () => {},
     });
 
-  const handleSupporter = (opinionId: number) => {
-    api.addSupporter({ opinion_id: opinionId }).then((result) => {
+  const handleVote = (opinionId: number) => {
+    api.createVote({ opinion_id: opinionId }).then((result) => {
       if (result.isOk()) {
         state.match({
           some: (state) => {
@@ -93,7 +97,7 @@ export default function View(props: Props) {
                 (opinion) => opinion.position === true
               )}
               onOpinion={handleOpinion(true)}
-              onSupporter={handleSupporter}
+              onVote={handleVote}
             />
             <h3>False ({state.votes[1]} votes)</h3>
             <Opinions
@@ -101,7 +105,7 @@ export default function View(props: Props) {
                 (opinion) => opinion.position === false
               )}
               onOpinion={handleOpinion(false)}
-              onSupporter={handleSupporter}
+              onVote={handleVote}
             />
           </>
         ),

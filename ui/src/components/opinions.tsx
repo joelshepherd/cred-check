@@ -6,34 +6,32 @@ import Opinion from "./opinion.tsx";
 interface Props {
   opinions: OpinionModel[];
   onOpinion: (body: string) => void;
-  onSupporter: (opinionId: number) => void;
+  onVote: (opinionId: number) => void;
 }
 
-export default function Opinions({ opinions, onOpinion, onSupporter }: Props) {
+export default function Opinions({ opinions, onOpinion, onVote }: Props) {
   const token = React.useContext(tokenContext);
   const [body, setBody] = React.useState("");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onOpinion(body);
+    setBody("");
   };
 
-  const handleSupporter = (opinionId: number) => () => onSupporter(opinionId);
+  const handleVote = (opinionId: number) => () => onVote(opinionId);
 
   return (
     <>
       <ul>
         {opinions.map((opinion) => (
           <li key={opinion.id}>
-            <Opinion
-              onSupporter={handleSupporter(opinion.id)}
-              opinion={opinion}
-            />
+            <Opinion onVote={handleVote(opinion.id)} opinion={opinion} />
           </li>
         ))}
       </ul>
 
-      {token && (
+      {token.isSome() && (
         <form onSubmit={handleSubmit}>
           <label>
             Body{" "}

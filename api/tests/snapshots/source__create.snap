@@ -4,7 +4,15 @@ expression: json_response(res)
 
 ---
 {
-  "id": "[id]",
-  "title": "TODO",
-  "url": "example.com/new"
+  "opinions": [],
+  "source": {
+    "created_at": "[created_at]",
+    "id": "[id]",
+    "title": "TODO",
+    "url": "example.com/new"
+  },
+  "votes": [
+    0,
+    0
+  ]
 }

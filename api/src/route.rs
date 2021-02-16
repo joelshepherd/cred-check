@@ -20,11 +20,11 @@ pub fn init(db: Db) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rej
                     .and(warp::body::json())
                     .and_then(handler::source::create)),
         ))
-        .or(warp::path("supporter").and(
+        .or(warp::path("vote").and(
             warp::post()
                 .and(with_db_and_user(db.clone()))
                 .and(warp::body::json())
-                .and_then(handler::supporter::create),
+                .and_then(handler::vote::create),
         ))
         .or(warp::path("user").and(
             warp::get()

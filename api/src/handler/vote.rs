@@ -14,15 +14,15 @@ pub async fn create(
     // Validate the opinion exists
     model::opinion::find(&db, request.opinion_id).await?;
 
-    let input = model::supporter::CreateSupporter {
+    let input = model::vote::CreateVote {
         opinion_id: request.opinion_id,
         user_id: user.id,
     };
 
-    let supporter = model::supporter::create(&db, input).await?;
+    let vote = model::vote::create(&db, input).await?;
 
     Ok(warp::reply::with_status(
-        warp::reply::json(&supporter),
+        warp::reply::json(&vote),
         warp::http::status::StatusCode::CREATED,
     ))
 }

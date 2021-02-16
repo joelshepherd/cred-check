@@ -4,9 +4,10 @@ expression: json_response(res)
 
 ---
 {
+  "body": "This opinion is true.",
+  "created_at": "[created_at]",
   "id": "[id]",
-  "source_id": 1,
-  "user_id": 1,
   "position": true,
-  "body": "This opinion is true."
+  "source_id": 1,
+  "user_id": 1
 }
