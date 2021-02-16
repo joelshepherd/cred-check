@@ -1,10 +1,18 @@
+import { Ok, Err, Result } from "./deps.ts";
+
+// Status code for now
+type Error = number;
+type ApiResult<T> = Result<T, Error>;
+
 interface AddOpinionRequest {
   source_id: number;
   position: boolean;
   body: string;
 }
 
-export function addOpinion(input: AddOpinionRequest): Promise<Opinion> {
+export function addOpinion(
+  input: AddOpinionRequest
+): Promise<ApiResult<Opinion>> {
   return request("post", "opinion", input);
 }
 
@@ -18,7 +26,9 @@ interface Supporter {
   user_id: number;
 }
 
-export function addSupporter(input: CreateSupporter): Promise<Supporter> {
+export function addSupporter(
+  input: CreateSupporter
+): Promise<ApiResult<Supporter>> {
   return request("post", "supporter", input);
 }
 
@@ -36,21 +46,25 @@ export interface Opinion {
   body: string;
 }
 
-export interface SourceResponse {
+export interface FindSource {
   source: Source;
   opinions: Opinion[];
   votes: [number, number];
 }
 
-export function findSource(url: string): Promise<SourceResponse> {
+export function findSource(url: string): Promise<ApiResult<FindSource>> {
   return request("get", `source/${url}`);
 }
 
-async function request<T>(
+export function createSource(url: string): Promise<ApiResult<FindSource>> {
+  return request("post", `source`, { url });
+}
+
+async function request<T = unknown>(
   method: "get" | "post",
   path: string,
   data?: object
-): Promise<T> {
+): Promise<ApiResult<T>> {
   const authorization = localStorage.getItem("token") ?? "";
 
   const res = await fetch(`http://localhost:8080/${path}`, {
@@ -61,5 +75,7 @@ async function request<T>(
     credentials: "include",
   });
 
-  return res.json();
+  if (!res.ok) return Err(res.status);
+
+  return Ok(await res.json());
 }

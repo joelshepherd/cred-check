@@ -1,4 +1,4 @@
-import { React } from "../deps.ts";
+import { None, React, Some } from "../deps.ts";
 import { subscribe, unsubscribe } from "../history.ts";
 import View from "./view.tsx";
 
@@ -15,8 +15,8 @@ export default function Router() {
 
   if (path.startsWith("/view/")) {
     const source = path.slice(6);
-    return <View url={source} />;
+    return <View url={Some(source)} />;
   }
 
-  return <View />;
+  return <View url={None} />;
 }
