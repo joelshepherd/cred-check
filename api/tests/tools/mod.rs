@@ -1,8 +1,5 @@
-use serde_json::{json, Map, Value};
-use warp::{
-    body::json,
-    hyper::{body::Bytes, Response},
-};
+use serde_json::{json, Value};
+use warp::hyper::{body::Bytes, Response};
 
 /// Seed a test source with the url `example.com/seeded`
 /// TODO: clippy seems to be flagging incorrectly

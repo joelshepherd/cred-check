@@ -1,5 +1,5 @@
 import { Opinion as OpinionModel } from "../api.ts";
-import { tokenContext } from "../context/token.tsx";
+import { sessionContext } from "../context/session.tsx";
 import { React } from "../deps.ts";
 
 interface Props {
@@ -8,12 +8,12 @@ interface Props {
 }
 
 export default function Opinion({ opinion, onVote }: Props) {
-  const token = React.useContext(tokenContext);
+  const session = React.useContext(sessionContext);
 
   return (
     <p>
       {opinion.body}
-      {token.isSome() && <button onClick={onVote}>Support</button>}
+      {session.authenticated && <button onClick={onVote}>Support</button>}
     </p>
   );
 }

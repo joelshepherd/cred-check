@@ -1,5 +1,5 @@
 import { Opinion as OpinionModel } from "../api.ts";
-import { tokenContext } from "../context/token.tsx";
+import { sessionContext } from "../context/session.tsx";
 import { React } from "../deps.ts";
 import Opinion from "./opinion.tsx";
 
@@ -10,7 +10,7 @@ interface Props {
 }
 
 export default function Opinions({ opinions, onOpinion, onVote }: Props) {
-  const token = React.useContext(tokenContext);
+  const session = React.useContext(sessionContext);
   const [body, setBody] = React.useState("");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -31,7 +31,7 @@ export default function Opinions({ opinions, onOpinion, onVote }: Props) {
         ))}
       </ul>
 
-      {token.isSome() && (
+      {session.authenticated && (
         <form onSubmit={handleSubmit}>
           <label>
             Body{" "}
