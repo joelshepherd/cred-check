@@ -10,12 +10,7 @@ use warp::test::request;
 async fn test_find() {
     let api = init().await;
 
-    tools::seed_source().await;
-
-    let res = request()
-        .path("/source/example.com/seeded")
-        .reply(&api)
-        .await;
+    let res = request().path("/source/test.com").reply(&api).await;
 
     assert_eq!(res.status(), StatusCode::OK);
     assert_json_snapshot!(json_response(res));
@@ -26,7 +21,7 @@ async fn test_find_not_found() {
     let api = init().await;
 
     let res = request()
-        .path("/source/example.com/not_found")
+        .path("/source/test.com/not_found")
         .reply(&api)
         .await;
 
@@ -40,7 +35,7 @@ async fn test_create() {
     let res = request()
         .method("POST")
         .path("/source")
-        .body(r#"{ "url": "example.com/new" }"#)
+        .body(r#"{ "url": "test.com/new" }"#)
         .reply(&api)
         .await;
 

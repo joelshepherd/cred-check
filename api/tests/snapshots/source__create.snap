@@ -1,5 +1,5 @@
 ---
-source: tests/source.rs
+source: api/tests/source.rs
 expression: json_response(res)
 
 ---
@@ -9,7 +9,7 @@ expression: json_response(res)
     "created_at": "[created_at]",
     "id": "[id]",
     "title": "TODO",
-    "url": "example.com/new"
+    "url": "test.com/new"
   },
   "votes": [
     0,

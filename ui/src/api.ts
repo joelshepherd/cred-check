@@ -5,6 +5,29 @@ import { Ok, Err, Result } from "./deps.ts";
 type Error = number;
 type ApiResult<T> = Result<T, Error>;
 
+// Auth
+
+interface LoginRequest {
+  username: string;
+}
+
+interface SignupRequest {
+  name: string;
+  username: string;
+}
+
+interface Token {
+  token: string;
+}
+
+export function login(input: LoginRequest): Promise<ApiResult<Token>> {
+  return request("post", "login", input);
+}
+
+export function signup(input: SignupRequest): Promise<ApiResult<Token>> {
+  return request("post", "signup", input);
+}
+
 // Opinion
 
 interface CreateOpinion {

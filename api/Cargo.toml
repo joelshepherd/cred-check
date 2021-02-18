@@ -5,7 +5,10 @@ authors = ["Joel Shepherd <joel@swivid.ink>"]
 edition = "2018"
 
 [dependencies]
+base64 = "0.13"
 chrono = { version = "0.4", features = ["serde"] }
+lazy_static = "1.4"
+mwt = { path = "../mwt" }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 sqlx = { git = "https://github.com/launchbadge/sqlx", features = ["postgres", "macros", "runtime-tokio-rustls", "chrono"] }

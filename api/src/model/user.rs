@@ -1,5 +1,5 @@
 use crate::{error, Db};
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 
 #[derive(Serialize)]
 pub struct User {
@@ -9,10 +9,9 @@ pub struct User {
     pub created_at: chrono::DateTime<chrono::Utc>,
 }
 
-#[derive(Deserialize)]
 pub struct CreateUser {
-    name: String,
-    username: String,
+    pub name: String,
+    pub username: String,
 }
 
 /// Find a user by id
@@ -34,8 +33,8 @@ pub async fn find_by_username(db: &Db, username: String) -> error::Result<User> 
 }
 
 /// Find a user by token
-/// TODO: real token handling
 pub async fn find_from_token(db: &Db, token: String) -> Option<User> {
+    let token = crate::DECODER.decode::<String>(&token).ok()?;
     find_by_username(db, token).await.ok()
 }
 

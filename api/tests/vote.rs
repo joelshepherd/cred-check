@@ -10,12 +10,12 @@ use warp::test::request;
 async fn test_create() {
     let api = init().await;
 
-    tools::seed_opinion().await;
+    let token = tools::login().await;
 
     let res = request()
         .method("POST")
         .path("/vote")
-        .header("authorization", "seeded")
+        .header("authorization", token)
         .body(r#"{ "opinion_id": 1 }"#)
         .reply(&api)
         .await;
@@ -27,8 +27,6 @@ async fn test_create() {
 #[tokio::test]
 async fn test_create_with_no_auth() {
     let api = init().await;
-
-    tools::seed_source().await;
 
     // No auth header provided
     let res = request()

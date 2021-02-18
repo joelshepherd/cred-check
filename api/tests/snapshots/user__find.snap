@@ -1,11 +1,11 @@
 ---
-source: tests/user.rs
+source: api/tests/user.rs
 expression: json_response(res)
 
 ---
 {
   "created_at": "[created_at]",
   "id": "[id]",
-  "name": "Tester",
-  "username": "tester"
+  "name": "Test",
+  "username": "test"
 }

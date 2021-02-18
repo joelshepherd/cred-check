@@ -5,6 +5,16 @@ use warp::Filter;
 pub fn init(db: Db) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
     warp::path::end()
         .map(warp::reply)
+        .or(warp::path("login")
+            .and(warp::post())
+            .and(with_db(db.clone()))
+            .and(warp::body::json())
+            .and_then(handler::auth::login))
+        .or(warp::path("signup")
+            .and(warp::post())
+            .and(with_db(db.clone()))
+            .and(warp::body::json())
+            .and_then(handler::auth::signup))
         .or(warp::path("opinion")
             .and(warp::post())
             .and(with_db_and_user(db.clone()))
@@ -30,11 +40,7 @@ pub fn init(db: Db) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rej
             warp::get()
                 .and(with_db(db.clone()))
                 .and(warp::path::param())
-                .and_then(handler::user::find)
-                .or(warp::post()
-                    .and(with_db(db))
-                    .and(warp::body::json())
-                    .and_then(handler::user::create)),
+                .and_then(handler::user::find),
         ))
         .recover(map_error)
         .with(
