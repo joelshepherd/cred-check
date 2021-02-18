@@ -7,7 +7,10 @@ interface Props {
   onVote: () => void;
 }
 
-export default function Opinion({ opinion, onVote }: Props) {
+export default function Opinion({
+  opinion,
+  onVote,
+}: Props): React.ReactElement {
   const session = React.useContext(sessionContext);
 
   return (

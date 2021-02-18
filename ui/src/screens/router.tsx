@@ -3,7 +3,7 @@ import { subscribe, unsubscribe } from "../history.ts";
 import Auth from "./auth.tsx";
 import View from "./view.tsx";
 
-export default function Router() {
+export default function Router(): React.ReactElement {
   const [path, setPath] = React.useState(window.location.pathname);
   React.useEffect(() => {
     subscribe(setPath);
@@ -14,8 +14,8 @@ export default function Router() {
     return <Auth />;
   }
 
-  if (path.startsWith("/view")) {
-    const source = path.slice(6);
+  if (path.startsWith("/search")) {
+    const source = path.slice(8);
     return <View url={Some(source)} />;
   }
 

@@ -1,11 +1,11 @@
-import { Source } from "../api.ts";
+import { Source as SourceModel } from "../api.ts";
 import { React } from "../deps.ts";
 
 interface Props {
-  source: Source;
+  source: SourceModel;
 }
 
-export default function Source2({ source }: Props) {
+export default function Source({ source }: Props): React.ReactElement {
   return (
     <>
       <h2>{source.title}</h2>

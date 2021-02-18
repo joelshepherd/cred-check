@@ -1,0 +1,23 @@
+@import url("https://unpkg.com/sanitize.css/evergreen.css");
+
+:root {
+  --spacing: 1rem;
+  --large-spacing: calc(var(--spacing) * 2);
+  --small-spacing: calc(var(--spacing) / 2);
+}
+
+html {
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  padding: var(--spacing);
+}
+
+input,
+textarea {
+  display: block;
+  margin: var(--small-spacing) 0;
+}
+
+nav ul li {
+  display: inline-block;
+  margin-right: var(--small-spacing);
+}

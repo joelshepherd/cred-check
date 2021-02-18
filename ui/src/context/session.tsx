@@ -12,7 +12,7 @@ interface Props {
   children: React.ReactChild;
 }
 
-export function SessionProvider(props: Props) {
+export function SessionProvider(props: Props): React.ReactElement {
   const stored = window.localStorage.getItem("token");
 
   const [token, setToken] = React.useState(stored ? Some(stored) : None);

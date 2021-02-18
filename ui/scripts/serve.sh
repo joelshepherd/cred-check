@@ -1,1 +1,1 @@
-deno run --allow-net --allow-read https://deno.land/std/http/file_server.ts dist
+deno run --allow-net --allow-read --allow-write https://deno.land/x/denoliver/mod.ts -p 8081 dist

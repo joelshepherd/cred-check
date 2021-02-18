@@ -5,7 +5,7 @@ interface Props {
   onSearch: (query: string) => void;
 }
 
-export default function Search(props: Props) {
+export default function Search(props: Props): React.ReactElement {
   const [state, setState] = React.useState(props.initialState.unwrapOr(""));
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

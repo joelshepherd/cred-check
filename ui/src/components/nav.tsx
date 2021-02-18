@@ -1,17 +1,16 @@
 import { React } from "../deps.ts";
-import { push } from "../history.ts";
+import Link from "./link.tsx";
 
-export default function Nav() {
-  const handleClick = (path: string) => () => push(path);
-
+export default function Nav(): React.ReactElement {
   return (
     <nav>
+      <h1>Fact Checker</h1>
       <ul>
         <li>
-          <a onClick={handleClick("/")}>View</a>
+          <Link href="/">Search</Link>
         </li>
         <li>
-          <a onClick={handleClick("/auth")}>Auth</a>
+          <Link href="/auth">Auth</Link>
         </li>
       </ul>
     </nav>

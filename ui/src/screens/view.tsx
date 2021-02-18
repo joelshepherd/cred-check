@@ -1,7 +1,7 @@
 import * as api from "../api.ts";
 import Opinions from "../components/opinions.tsx";
 import Search from "../components/search.tsx";
-import Source2 from "../components/source.tsx";
+import Source from "../components/source.tsx";
 import { None, Option, React, Some } from "../deps.ts";
 import { push } from "../history.ts";
 
@@ -9,7 +9,7 @@ interface Props {
   url: Option<string>;
 }
 
-export default function View(props: Props) {
+export default function View(props: Props): React.ReactElement {
   const [state, setState] = React.useState<Option<api.SourceExt>>(None);
 
   React.useEffect(() => {
@@ -20,7 +20,7 @@ export default function View(props: Props) {
     });
   }, [props.url]);
 
-  const handleSearch = (query: string) => push(`/view/${query}`);
+  const handleSearch = (query: string) => push(`/search/${query}`);
 
   // Should only be able to be called if URL is set
   const handleCreateSource = () =>
@@ -39,17 +39,15 @@ export default function View(props: Props) {
           })
           .then((result) =>
             result.match({
-              ok: (opinion) =>
+              ok: (opinion) => {
                 setState(
                   Some({
                     ...state,
                     opinions: state.opinions.concat(opinion),
-                    votes: [
-                      state.votes[0] + (opinion.position ? 1 : 0),
-                      state.votes[1] + (opinion.position ? 0 : 1),
-                    ],
                   })
-                ),
+                );
+                handleVote(opinion.id);
+              },
               err: () => {},
             })
           ),
@@ -90,7 +88,7 @@ export default function View(props: Props) {
       {state.match({
         some: (state) => (
           <>
-            <Source2 source={state.source} />
+            <Source source={state.source} />
             <h3>True ({state.votes[0]} votes)</h3>
             <Opinions
               opinions={state.opinions.filter(

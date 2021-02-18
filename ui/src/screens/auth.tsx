@@ -2,7 +2,7 @@ import * as api from "../api.ts";
 import { sessionContext } from "../context/session.tsx";
 import { None, React, Some, Option } from "../deps.ts";
 
-export default function Auth() {
+export default function Auth(): React.ReactElement {
   const session = React.useContext(sessionContext);
   const [state, setState] = React.useState({
     name: "",
