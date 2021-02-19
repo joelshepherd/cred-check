@@ -1,4 +1,4 @@
-use crate::{error, Db};
+use crate::{error, parser, Db};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize)]
@@ -34,9 +34,8 @@ pub async fn find_by_url(db: &Db, url: String) -> error::Result<Source> {
 
 /// Create a new source
 pub async fn create(db: &Db, input: CreateSource) -> error::Result<Source> {
-    // TODO: parse url and pull title
-    let title = "TODO";
-    let url = input.url;
+    // Fetch canonical url and title
+    let (url, title) = parser::parse(input.url).await?;
 
     let source = sqlx::query_as!(
         Source,

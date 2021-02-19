@@ -4,6 +4,7 @@ extern crate lazy_static;
 mod error;
 mod handler;
 mod model;
+mod parser;
 mod route;
 
 use sqlx::{postgres::PgPoolOptions, PgPool};

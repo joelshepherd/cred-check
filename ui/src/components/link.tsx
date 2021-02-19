@@ -3,6 +3,7 @@ import { push } from "../history.ts";
 
 interface Props extends React.HTMLAttributes<HTMLAnchorElement> {
   href: string;
+  children: React.ReactChild;
 }
 
 export default function Link({
