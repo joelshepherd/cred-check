@@ -2,8 +2,6 @@ use crate::error;
 
 /// Parse an input URL, cleaning and fetching title
 pub async fn parse(input_url: String) -> error::Result<(String, String)> {
-    // TODO: transform known origins
-
     // Fetch page info
     let webpage = tokio::task::spawn_blocking(move || {
         let webpage_options = webpage::WebpageOptions {

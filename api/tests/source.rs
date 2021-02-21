@@ -35,7 +35,7 @@ async fn test_create() {
     let res = request()
         .method("POST")
         .path("/source")
-        .body(r#"{ "url": "test.com/new" }"#)
+        .body(r#"{ "url": "https://www.wikipedia.org/" }"#)
         .reply(&api)
         .await;
 

@@ -6,10 +6,18 @@ expression: json_response(res)
 {
   "opinions": [
     {
-      "body": "Test opinion body",
+      "body": "Test true opinion body.",
       "created_at": "[created_at]",
       "id": "[id]",
       "position": true,
+      "source_id": 1,
+      "user_id": 1
+    },
+    {
+      "body": "Test false opinion body.",
+      "created_at": "[created_at]",
+      "id": "[id]",
+      "position": false,
       "source_id": 1,
       "user_id": 1
     },
