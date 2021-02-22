@@ -1,2 +1,4 @@
+#!/bin/bash -e
 source .env
-cargo run
+sqlx migrate run
+cargo run $@
