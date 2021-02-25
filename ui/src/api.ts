@@ -71,7 +71,7 @@ export function createVote(input: CreateVote): Promise<ApiResult<Vote>> {
 export interface Source {
   id: number;
   title: string;
-  url: string;
+  canonical_url: string;
 }
 
 export interface SourceExt {

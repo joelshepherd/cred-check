@@ -10,7 +10,7 @@ export default function Source({ source }: Props): React.ReactElement {
     <>
       <h2>{source.title}</h2>
       <p>
-        <a href={source.url}>{source.url}</a>
+        <a href={source.canonical_url}>{source.canonical_url}</a>
       </p>
     </>
   );

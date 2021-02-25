@@ -7,7 +7,7 @@ export default function Nav(): React.ReactElement {
       <h1>Fact Checker</h1>
       <ul>
         <li>
-          <Link href="/">Search</Link>
+          <Link href="/search">Search</Link>
         </li>
         <li>
           <Link href="/auth">Auth</Link>

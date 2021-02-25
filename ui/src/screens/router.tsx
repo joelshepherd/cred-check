@@ -16,7 +16,7 @@ export default function Router(): React.ReactElement {
 
   if (path.startsWith("/search")) {
     const source = path.slice(8);
-    return <View url={Some(source)} />;
+    return <View url={source.length ? Some(source) : None} />;
   }
 
   return <View url={None} />;
