@@ -1,8 +1,14 @@
 create table "source" (
   id serial primary key,
   title text not null,
-  url text not null unique,
+  canonical_url text not null unique,
   created_at timestamp with time zone not null default now()
+);
+
+create table "alternative" (
+  id serial primary key,
+  source_id int not null,
+  url text not null unique
 );
 
 create table "opinion" (

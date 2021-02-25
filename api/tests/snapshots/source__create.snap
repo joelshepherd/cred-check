@@ -6,10 +6,10 @@ expression: json_response(res)
 {
   "opinions": [],
   "source": {
+    "canonical_url": "https://www.wikipedia.org/",
     "created_at": "[created_at]",
     "id": "[id]",
-    "title": "Wikipedia",
-    "url": "https://www.wikipedia.org/"
+    "title": "Wikipedia"
   },
   "votes": [
     0,

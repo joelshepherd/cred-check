@@ -31,10 +31,10 @@ expression: json_response(res)
     }
   ],
   "source": {
+    "canonical_url": "test.com",
     "created_at": "[created_at]",
     "id": "[id]",
-    "title": "Test title",
-    "url": "test.com"
+    "title": "Test title"
   },
   "votes": [
     0,

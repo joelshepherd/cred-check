@@ -17,6 +17,15 @@ async fn test_find() {
 }
 
 #[tokio::test]
+async fn test_find_by_alternative() {
+    let api = init().await;
+
+    let res = request().path("/source/www.test.com").reply(&api).await;
+
+    assert_eq!(res.status(), StatusCode::OK);
+}
+
+#[tokio::test]
 async fn test_find_not_found() {
     let api = init().await;
 
@@ -42,3 +51,5 @@ async fn test_create() {
     assert_eq!(res.status(), StatusCode::CREATED);
     assert_json_snapshot!(json_response(res));
 }
+
+// TODO: test for adding a new alternative url

@@ -1,6 +1,7 @@
 use crate::error;
 
 /// Parse an input URL, cleaning and fetching title
+/// TODO: Can I change `input_url` to `&str`?
 pub async fn parse(input_url: String) -> error::Result<(String, String)> {
     // Fetch page info
     let webpage = tokio::task::spawn_blocking(move || {

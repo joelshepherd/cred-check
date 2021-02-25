@@ -1,7 +1,13 @@
 insert into
-  source (title, url)
+  source (title, canonical_url)
 values
   ('Test title', 'test.com');
+
+insert into
+  alternative (source_id, url)
+values
+  (1, 'test.com'),
+  (1, 'www.test.com');
 
 insert into
   "user" (name, username)
