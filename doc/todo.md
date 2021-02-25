@@ -1,6 +1,6 @@
 # todo
 
-- [ ] additional (redirected) urls for sources
+- [x] additional (redirected) urls for sources
 - [ ] user authentication
 - [ ] input validation
 - [ ] order opinions by votes-vs-time

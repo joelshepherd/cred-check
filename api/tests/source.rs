@@ -52,4 +52,33 @@ async fn test_create() {
     assert_json_snapshot!(json_response(res));
 }
 
-// TODO: test for adding a new alternative url
+#[tokio::test]
+async fn test_create_alternative() {
+    let api = init().await;
+
+    let res_create = request()
+        .method("POST")
+        .path("/source")
+        .body(r#"{ "url": "https://wikipedia.org/" }"#)
+        .reply(&api)
+        .await;
+
+    assert_eq!(res_create.status(), StatusCode::CREATED);
+
+    let res_canonical = request()
+        .path("/source/https://www.wikipedia.org/")
+        .reply(&api)
+        .await;
+
+    let res_create = json_response(res_create);
+    let res_canonical = json_response(res_canonical);
+
+    assert_eq!(
+        res_create.as_object().unwrap()["source"]
+            .as_object()
+            .unwrap()["id"],
+        res_canonical.as_object().unwrap()["source"]
+            .as_object()
+            .unwrap()["id"],
+    )
+}

@@ -48,7 +48,8 @@ pub async fn create(db: &Db, input: CreateOpinion) -> error::Result<Opinion> {
         "insert into opinion (source_id, user_id, position, body) values ($1, $2, $3, $4) returning *",
         input.source_id,
         input.user_id,
-        input.position, input.body
+        input.position,
+        input.body
     )
     .fetch_one(db)
     .await?;

@@ -37,19 +37,35 @@ pub async fn create(db: &Db, input: CreateSource) -> error::Result<Source> {
     // Fetch canonical url and title
     let (canonical_url, title) = parser::parse(input.url.clone()).await?;
 
-    // TODO: transaction for insert source and alternative
-
     let source = sqlx::query_as!(
         Source,
-        "insert into source (title, canonical_url) values ($1, $2) returning *",
-        title,
-        canonical_url
+        "select * from source where canonical_url = $1",
+        &canonical_url
     )
-    .fetch_one(db)
+    .fetch_optional(db)
     .await?;
 
-    // Save the canonical url
-    create_alternative(db, &source.id, &canonical_url).await?;
+    let source = match source {
+        Some(source) => source,
+        None => {
+            // TODO: transaction for insert source and alternative
+
+            let new_source = sqlx::query_as!(
+                Source,
+                "insert into source (title, canonical_url) values ($1, $2) returning *",
+                title,
+                canonical_url
+            )
+            .fetch_one(db)
+            .await?;
+
+            // Save the canonical url
+            create_alternative(db, &new_source.id, &canonical_url).await?;
+
+            new_source
+        }
+    };
+
     // Save the input url if it's different
     if input.url != canonical_url {
         create_alternative(db, &source.id, &input.url).await?;
