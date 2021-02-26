@@ -32,7 +32,13 @@ pub async fn find(db: &Db, id: i32) -> error::Result<Opinion> {
 pub async fn find_by_source(db: &Db, source_id: i32) -> error::Result<Vec<Opinion>> {
     let opinions = sqlx::query_as!(
         Opinion,
-        "select * from opinion where source_id = $1",
+        "
+        select opinion.* from opinion
+        left join vote on opinion.id = vote.opinion_id
+        where opinion.source_id = $1
+        group by opinion.id
+        order by count(vote.*) desc
+        ",
         source_id
     )
     .fetch_all(db)

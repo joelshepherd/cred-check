@@ -39,4 +39,6 @@ create table "vote" (
   unique (source_id, user_id)
 );
 
+create index vote_opinion_id_idx on "vote" (opinion_id);
+
 create index vote_source_id_idx on "vote" (source_id);
