@@ -1,9 +1,7 @@
 use crate::{error, Db};
-use serde::Serialize;
 
-#[derive(Serialize)]
 pub struct User {
-    pub id: i32,
+    pub id: i64,
     pub username: String,
     pub name: String,
     pub created_at: chrono::DateTime<chrono::Utc>,
@@ -15,7 +13,7 @@ pub struct CreateUser {
 }
 
 /// Find a user by id
-pub async fn find(db: &Db, id: i32) -> error::Result<User> {
+pub async fn find(db: &Db, id: i64) -> error::Result<User> {
     let user = sqlx::query_as!(User, "select * from \"user\" where id = $1", id)
         .fetch_one(db)
         .await?;

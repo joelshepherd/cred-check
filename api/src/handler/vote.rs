@@ -3,7 +3,7 @@ use serde::Deserialize;
 
 #[derive(Deserialize)]
 pub struct CreateRequest {
-    opinion_id: i32,
+    opinion_id: i64,
 }
 
 pub async fn create(
@@ -19,10 +19,7 @@ pub async fn create(
         user_id: user.id,
     };
 
-    let vote = model::vote::create(&db, input).await?;
+    model::vote::create(&db, input).await?;
 
-    Ok(warp::reply::with_status(
-        warp::reply::json(&vote),
-        warp::http::status::StatusCode::CREATED,
-    ))
+    Ok(warp::reply())
 }

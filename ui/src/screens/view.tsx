@@ -10,13 +10,13 @@ interface Props {
 }
 
 export default function View(props: Props): React.ReactElement {
-  const [state, setState] = React.useState<Option<api.SourceExt>>(None);
+  const [source, setSource] = React.useState<Option<api.SourceReply>>(None);
 
   React.useEffect(() => {
     props.url.match({
       some: (url) =>
-        api.findSource(url).then((result) => setState(result.ok())),
-      none: () => setState(None),
+        api.findSource(url).then((result) => setSource(result.ok())),
+      none: () => setSource(None),
     });
   }, [props.url]);
 
@@ -26,26 +26,26 @@ export default function View(props: Props): React.ReactElement {
   const handleCreateSource = () =>
     api
       .createSource(props.url.unwrap())
-      .then((result) => setState(result.ok()));
+      .then((result) => setSource(result.ok()));
 
   const handleOpinion = (position: boolean) => (body: string) =>
-    state.match({
+    source.match({
       some: (state) =>
         api
           .createOpinion({
             body,
             position,
-            source_id: state.source.id,
+            source_id: state.id,
           })
           .then((result) =>
             result.match({
               ok: (opinion) => {
-                setState(
-                  Some({
-                    ...state,
-                    opinions: state.opinions.concat(opinion),
-                  })
-                );
+                // setSource(
+                //   Some({
+                //     ...source,
+                //     opinions: source.opinions.concat(opinion),
+                //   })
+                // );
                 handleVote(opinion.id);
               },
               err: () => {},
@@ -57,23 +57,22 @@ export default function View(props: Props): React.ReactElement {
   const handleVote = (opinionId: number) => {
     api.createVote({ opinion_id: opinionId }).then((result) => {
       if (result.isOk()) {
-        state.match({
+        source.match({
           some: (state) => {
-            const opinion = state.opinions.find(
-              (opinion) => opinion.id === opinionId
-            );
-
-            if (opinion) {
-              setState(
-                Some({
-                  ...state,
-                  votes: [
-                    state.votes[0] + (opinion.position ? 1 : 0),
-                    state.votes[1] + (opinion.position ? 0 : 1),
-                  ],
-                })
-              );
-            }
+            // const opinion = source.opinions.find(
+            //   (opinion) => opinion.id === opinionId
+            // );
+            // if (opinion) {
+            //   setSource(
+            //     Some({
+            //       ...source,
+            //       votes: [
+            //         source.votes[0] + (opinion.position ? 1 : 0),
+            //         source.votes[1] + (opinion.position ? 0 : 1),
+            //       ],
+            //     })
+            //   );
+            // }
           },
           none: () => {},
         });
@@ -85,26 +84,26 @@ export default function View(props: Props): React.ReactElement {
     <div>
       <h1>View</h1>
       <Search initialState={props.url} onSearch={handleSearch} />
-      {state.match({
-        some: (state) => (
+      {source.match({
+        some: (source) => (
           <>
-            <Source source={state.source} />
-            <h3>True ({state.votes[0]} votes)</h3>
-            <Opinions
-              opinions={state.opinions.filter(
+            <Source source={source} />
+            <h3>True ({0} votes)</h3>
+            {/* <Opinions
+              opinions={source.opinions.filter(
                 (opinion) => opinion.position === true
               )}
               onOpinion={handleOpinion(true)}
               onVote={handleVote}
-            />
-            <h3>False ({state.votes[1]} votes)</h3>
-            <Opinions
-              opinions={state.opinions.filter(
+            /> */}
+            <h3>False ({1} votes)</h3>
+            {/* <Opinions
+              opinions={source.opinions.filter(
                 (opinion) => opinion.position === false
               )}
               onOpinion={handleOpinion(false)}
               onVote={handleVote}
-            />
+            /> */}
           </>
         ),
         none: () =>

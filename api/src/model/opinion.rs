@@ -1,26 +1,23 @@
 use crate::{error, Db};
-use serde::{Deserialize, Serialize};
 
-#[derive(Serialize)]
 pub struct Opinion {
-    pub id: i32,
-    pub source_id: i32,
-    pub user_id: i32,
+    pub id: i64,
+    pub source_id: i64,
+    pub user_id: i64,
     pub position: bool,
     pub body: String,
     pub created_at: chrono::DateTime<chrono::Utc>,
 }
 
-#[derive(Deserialize)]
 pub struct CreateOpinion {
-    pub source_id: i32,
-    pub user_id: i32,
+    pub source_id: i64,
+    pub user_id: i64,
     pub position: bool,
     pub body: String,
 }
 
 /// Find a opinion by id
-pub async fn find(db: &Db, id: i32) -> error::Result<Opinion> {
+pub async fn find(db: &Db, id: i64) -> error::Result<Opinion> {
     let opinion = sqlx::query_as!(Opinion, "select * from opinion where id = $1", id)
         .fetch_one(db)
         .await?;
@@ -29,7 +26,7 @@ pub async fn find(db: &Db, id: i32) -> error::Result<Opinion> {
 }
 
 /// Find opinions by source
-pub async fn find_by_source(db: &Db, source_id: i32) -> error::Result<Vec<Opinion>> {
+pub async fn find_by_source(db: &Db, source_id: &i64) -> error::Result<Vec<Opinion>> {
     let opinions = sqlx::query_as!(
         Opinion,
         "

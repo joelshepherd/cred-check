@@ -1,9 +1,9 @@
-import { Opinion as OpinionModel } from "../api.ts";
+import { OpinionReply } from "../api.ts";
 import { sessionContext } from "../context/session.tsx";
 import { React } from "../deps.ts";
 
 interface Props {
-  opinion: OpinionModel;
+  opinion: OpinionReply;
   onVote: () => void;
 }
 

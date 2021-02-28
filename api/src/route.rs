@@ -24,6 +24,7 @@ pub fn init(db: Db) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rej
             warp::get()
                 .and(with_db(db.clone()))
                 .and(warp::path::tail())
+                .and(warp::query::<handler::source::FindOptions>())
                 .and_then(handler::source::find)
                 .or(warp::post()
                     .and(with_db(db.clone()))

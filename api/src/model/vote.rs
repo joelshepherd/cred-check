@@ -1,23 +1,21 @@
 use crate::{error, Db};
-use serde::Serialize;
 
-#[derive(Serialize)]
 pub struct Vote {
-    pub id: i32,
-    pub source_id: i32,
-    pub opinion_id: i32,
-    pub user_id: i32,
+    pub id: i64,
+    pub source_id: i64,
+    pub opinion_id: i64,
+    pub user_id: i64,
     pub position: bool,
     pub created_at: chrono::DateTime<chrono::Utc>,
 }
 
 pub struct CreateVote {
-    pub opinion_id: i32,
-    pub user_id: i32,
+    pub opinion_id: i64,
+    pub user_id: i64,
 }
 
 /// Count votes for source
-pub async fn count_by_position(db: &Db, source_id: i32) -> error::Result<(i64, i64)> {
+pub async fn count_by_position(db: &Db, source_id: &i64) -> error::Result<(i64, i64)> {
     let rows = sqlx::query!(
         "select position, count(*) from vote where source_id = $1 group by position",
         &source_id

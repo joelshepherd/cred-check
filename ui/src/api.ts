@@ -36,7 +36,7 @@ interface CreateOpinion {
   body: string;
 }
 
-export interface Opinion {
+export interface OpinionReply {
   id: number;
   source_id: number;
   user_id: number;
@@ -46,45 +46,32 @@ export interface Opinion {
 
 export function createOpinion(
   input: CreateOpinion
-): Promise<ApiResult<Opinion>> {
+): Promise<ApiResult<OpinionReply>> {
   return request("post", "opinion", input);
 }
 
 // Vote
-
 interface CreateVote {
   opinion_id: number;
 }
 
-interface Vote {
-  id: number;
-  opinion_id: number;
-  user_id: number;
-}
-
-export function createVote(input: CreateVote): Promise<ApiResult<Vote>> {
+export function createVote(input: CreateVote): Promise<ApiResult<void>> {
   return request("post", "vote", input);
 }
 
 // Source
 
-export interface Source {
+export interface SourceReply {
   id: number;
   title: string;
   canonical_url: string;
 }
 
-export interface SourceExt {
-  source: Source;
-  opinions: Opinion[];
-  votes: [number, number];
-}
-
-export function findSource(url: string): Promise<ApiResult<SourceExt>> {
+export function findSource(url: string): Promise<ApiResult<SourceReply>> {
   return request("get", `source/${url}`);
 }
 
-export function createSource(url: string): Promise<ApiResult<SourceExt>> {
+export function createSource(url: string): Promise<ApiResult<SourceReply>> {
   return request("post", `source`, { url });
 }
 

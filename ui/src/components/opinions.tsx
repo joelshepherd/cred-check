@@ -1,11 +1,11 @@
-import { Opinion as OpinionModel } from "../api.ts";
+import { OpinionReply } from "../api.ts";
 import { sessionContext } from "../context/session.tsx";
 import { React } from "../deps.ts";
 import Opinion from "./opinion.tsx";
 import OpinionForm, { State } from "./opinionForm.tsx";
 
 interface Props {
-  opinions: OpinionModel[];
+  opinions: OpinionReply[];
   onOpinion: (body: string) => void;
   onVote: (opinionId: number) => void;
 }

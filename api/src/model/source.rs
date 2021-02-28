@@ -1,21 +1,18 @@
 use crate::{error, parser, Db};
-use serde::{Deserialize, Serialize};
 
-#[derive(Serialize)]
 pub struct Source {
-    pub id: i32,
+    pub id: i64,
     pub title: String,
     pub canonical_url: String,
     pub created_at: chrono::DateTime<chrono::Utc>,
 }
 
-#[derive(Serialize, Deserialize)]
 pub struct CreateSource {
     pub url: String,
 }
 
 /// Find a source by id
-pub async fn find(db: &Db, id: i32) -> error::Result<Source> {
+pub async fn find(db: &Db, id: i64) -> error::Result<Source> {
     let source = sqlx::query_as!(Source, "select * from source where id = $1", id)
         .fetch_one(db)
         .await?;
@@ -75,7 +72,7 @@ pub async fn create(db: &Db, input: CreateSource) -> error::Result<Source> {
 }
 
 /// Create a new alternative url for a source
-async fn create_alternative(db: &Db, source_id: &i32, url: &str) -> error::Result<()> {
+async fn create_alternative(db: &Db, source_id: &i64, url: &str) -> error::Result<()> {
     sqlx::query!(
         "insert into alternative (source_id, url) values ($1, $2)",
         &source_id,
