@@ -12,7 +12,7 @@ pub async fn create(
     request: CreateRequest,
 ) -> Result<impl warp::Reply, warp::Rejection> {
     // Validate the opinion exists
-    model::opinion::find(&db, request.opinion_id).await?;
+    model::opinion::find(&db, &request.opinion_id).await?;
 
     let input = model::vote::CreateVote {
         opinion_id: request.opinion_id,

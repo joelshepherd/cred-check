@@ -4,38 +4,26 @@ expression: json_response(res)
 
 ---
 {
+  "canonical_url": "test.com",
+  "id": "[id]",
   "opinions": [
     {
       "body": "Test true opinion body.",
-      "created_at": "[created_at]",
       "id": "[id]",
-      "position": true,
-      "source_id": 1,
-      "user_id": 1
+      "position": true
     },
     {
       "body": "Test false opinion body.",
-      "created_at": "[created_at]",
       "id": "[id]",
-      "position": false,
-      "source_id": 1,
-      "user_id": 1
+      "position": false
     },
     {
       "body": "This opinion is true.",
-      "created_at": "[created_at]",
       "id": "[id]",
-      "position": true,
-      "source_id": 1,
-      "user_id": 1
+      "position": true
     }
   ],
-  "source": {
-    "canonical_url": "test.com",
-    "created_at": "[created_at]",
-    "id": "[id]",
-    "title": "Test title"
-  },
+  "title": "Test title",
   "votes": [
     0,
     0

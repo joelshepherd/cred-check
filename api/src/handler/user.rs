@@ -17,7 +17,7 @@ impl From<model::user::User> for UserReply {
 }
 
 pub async fn find(db: Db, id: i64) -> Result<impl warp::Reply, warp::Rejection> {
-    let user = model::user::find(&db, id).await?;
+    let user = model::user::find(&db, &id).await?;
     let reply = UserReply::from(user);
 
     Ok(warp::reply::json(&reply))

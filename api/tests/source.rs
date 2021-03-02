@@ -74,11 +74,7 @@ async fn test_create_alternative() {
     let res_canonical = json_response(res_canonical);
 
     assert_eq!(
-        res_create.as_object().unwrap()["source"]
-            .as_object()
-            .unwrap()["id"],
-        res_canonical.as_object().unwrap()["source"]
-            .as_object()
-            .unwrap()["id"],
+        res_create.as_object().unwrap()["id"],
+        res_canonical.as_object().unwrap()["id"],
     )
 }

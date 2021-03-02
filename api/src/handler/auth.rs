@@ -19,7 +19,7 @@ pub struct TokenReply {
 
 pub async fn login(db: Db, request: LoginRequest) -> Result<impl warp::Reply, warp::Rejection> {
     // Validate the source exists
-    let user = model::user::find_by_username(&db, request.username).await?;
+    let user = model::user::find_by_username(&db, &request.username).await?;
     let token = crate::ENCODER.encode(&user.username).unwrap();
     let body = TokenReply { token };
 

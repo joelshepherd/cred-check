@@ -4,8 +4,6 @@ expression: json_response(res)
 
 ---
 {
-  "created_at": "[created_at]",
   "id": "[id]",
-  "name": "Test",
-  "username": "test"
+  "name": "Test"
 }

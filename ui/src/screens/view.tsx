@@ -10,13 +10,14 @@ interface Props {
 }
 
 export default function View(props: Props): React.ReactElement {
-  const [source, setSource] = React.useState<Option<api.SourceReply>>(None);
+  const [state, setState] = React.useState<Option<api.SourceReply>>(None);
+  const [lastVote, setLastVote] = React.useState<Option<boolean>>(None);
 
   React.useEffect(() => {
     props.url.match({
       some: (url) =>
-        api.findSource(url).then((result) => setSource(result.ok())),
-      none: () => setSource(None),
+        api.findSource(url).then((result) => setState(result.ok())),
+      none: () => setState(None),
     });
   }, [props.url]);
 
@@ -26,10 +27,10 @@ export default function View(props: Props): React.ReactElement {
   const handleCreateSource = () =>
     api
       .createSource(props.url.unwrap())
-      .then((result) => setSource(result.ok()));
+      .then((result) => setState(result.ok()));
 
   const handleOpinion = (position: boolean) => (body: string) =>
-    source.match({
+    state.match({
       some: (state) =>
         api
           .createOpinion({
@@ -40,13 +41,12 @@ export default function View(props: Props): React.ReactElement {
           .then((result) =>
             result.match({
               ok: (opinion) => {
-                // setSource(
-                //   Some({
-                //     ...source,
-                //     opinions: source.opinions.concat(opinion),
-                //   })
-                // );
-                handleVote(opinion.id);
+                setState(
+                  Some({
+                    ...state,
+                    opinions: state.opinions.concat(opinion),
+                  })
+                );
               },
               err: () => {},
             })
@@ -57,22 +57,37 @@ export default function View(props: Props): React.ReactElement {
   const handleVote = (opinionId: number) => {
     api.createVote({ opinion_id: opinionId }).then((result) => {
       if (result.isOk()) {
-        source.match({
+        state.match({
           some: (state) => {
-            // const opinion = source.opinions.find(
-            //   (opinion) => opinion.id === opinionId
-            // );
-            // if (opinion) {
-            //   setSource(
-            //     Some({
-            //       ...source,
-            //       votes: [
-            //         source.votes[0] + (opinion.position ? 1 : 0),
-            //         source.votes[1] + (opinion.position ? 0 : 1),
-            //       ],
-            //     })
-            //   );
-            // }
+            const opinion = state.opinions.find(
+              (opinion) => opinion.id === opinionId
+            );
+            if (!opinion) return;
+
+            const thisVote = opinion.position;
+
+            setState(
+              Some({
+                ...state,
+                votes: [
+                  state.votes[0] +
+                    (thisVote ? 1 : 0) -
+                    lastVote.match({
+                      some: (lastVote) => (lastVote ? 1 : 0),
+                      none: 0,
+                    }),
+                  state.votes[1] +
+                    (thisVote ? 0 : 1) -
+                    lastVote.match({
+                      some: (lastVote) => (lastVote ? 0 : 1),
+                      none: 0,
+                    }),
+                ],
+              })
+            );
+
+            // TODO: Pull last vote from the server instead
+            setLastVote(Some(thisVote));
           },
           none: () => {},
         });
@@ -84,26 +99,26 @@ export default function View(props: Props): React.ReactElement {
     <div>
       <h1>View</h1>
       <Search initialState={props.url} onSearch={handleSearch} />
-      {source.match({
-        some: (source) => (
+      {state.match({
+        some: (state) => (
           <>
-            <Source source={source} />
-            <h3>True ({0} votes)</h3>
-            {/* <Opinions
-              opinions={source.opinions.filter(
+            <Source source={state} />
+            <h3>True ({state.votes[0]} votes)</h3>
+            <Opinions
+              opinions={state.opinions.filter(
                 (opinion) => opinion.position === true
               )}
               onOpinion={handleOpinion(true)}
               onVote={handleVote}
-            /> */}
-            <h3>False ({1} votes)</h3>
-            {/* <Opinions
-              opinions={source.opinions.filter(
+            />
+            <h3>False ({state.votes[1]} votes)</h3>
+            <Opinions
+              opinions={state.opinions.filter(
                 (opinion) => opinion.position === false
               )}
               onOpinion={handleOpinion(false)}
               onVote={handleVote}
-            /> */}
+            />
           </>
         ),
         none: () =>

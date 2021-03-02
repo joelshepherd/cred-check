@@ -12,7 +12,7 @@ pub struct CreateSource {
 }
 
 /// Find a source by id
-pub async fn find(db: &Db, id: i64) -> error::Result<Source> {
+pub async fn find(db: &Db, id: &i64) -> error::Result<Source> {
     let source = sqlx::query_as!(Source, "select * from source where id = $1", id)
         .fetch_one(db)
         .await?;
@@ -21,7 +21,7 @@ pub async fn find(db: &Db, id: i64) -> error::Result<Source> {
 }
 
 /// Search for a source by url
-pub async fn find_by_url(db: &Db, url: String) -> error::Result<Source> {
+pub async fn find_by_url(db: &Db, url: &str) -> error::Result<Source> {
     let source = sqlx::query_as!(Source, "select source.* from source inner join alternative on source.id = alternative.source_id where alternative.url = $1", url)
         .fetch_one(db)
         .await?;

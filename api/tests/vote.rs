@@ -20,7 +20,7 @@ async fn test_create() {
         .reply(&api)
         .await;
 
-    assert_eq!(res.status(), StatusCode::CREATED);
+    assert_eq!(res.status(), StatusCode::OK);
     assert_json_snapshot!(json_response(res));
 }
 

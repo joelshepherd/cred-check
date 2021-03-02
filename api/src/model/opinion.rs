@@ -17,7 +17,7 @@ pub struct CreateOpinion {
 }
 
 /// Find a opinion by id
-pub async fn find(db: &Db, id: i64) -> error::Result<Opinion> {
+pub async fn find(db: &Db, id: &i64) -> error::Result<Opinion> {
     let opinion = sqlx::query_as!(Opinion, "select * from opinion where id = $1", id)
         .fetch_one(db)
         .await?;

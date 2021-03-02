@@ -16,15 +16,15 @@ interface SignupRequest {
   username: string;
 }
 
-interface Token {
+interface TokenReply {
   token: string;
 }
 
-export function login(input: LoginRequest): Promise<ApiResult<Token>> {
+export function login(input: LoginRequest): Promise<ApiResult<TokenReply>> {
   return request("post", "login", input);
 }
 
-export function signup(input: SignupRequest): Promise<ApiResult<Token>> {
+export function signup(input: SignupRequest): Promise<ApiResult<TokenReply>> {
   return request("post", "signup", input);
 }
 
@@ -38,8 +38,6 @@ interface CreateOpinion {
 
 export interface OpinionReply {
   id: number;
-  source_id: number;
-  user_id: number;
   position: boolean;
   body: string;
 }
@@ -65,6 +63,8 @@ export interface SourceReply {
   id: number;
   title: string;
   canonical_url: string;
+  opinions: OpinionReply[];
+  votes: [number, number];
 }
 
 export function findSource(url: string): Promise<ApiResult<SourceReply>> {
@@ -92,5 +92,10 @@ async function request<T = unknown>(
 
   if (!res.ok) return Err(res.status);
 
-  return Ok(await res.json());
+  const reply =
+    res.headers.get("content-type") === "application/json"
+      ? await res.json()
+      : void 0;
+
+  return Ok(reply);
 }

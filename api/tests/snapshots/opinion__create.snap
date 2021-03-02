@@ -1,13 +1,10 @@
 ---
-source: tests/opinion.rs
+source: api/tests/opinion.rs
 expression: json_response(res)
 
 ---
 {
   "body": "This opinion is true.",
-  "created_at": "[created_at]",
   "id": "[id]",
-  "position": true,
-  "source_id": 1,
-  "user_id": 1
+  "position": true
 }

@@ -38,7 +38,7 @@ pub async fn count_by_position(db: &Db, source_id: &i64) -> error::Result<(i64, 
 
 /// Create a new vote
 pub async fn create(db: &Db, input: CreateVote) -> error::Result<Vote> {
-    let opinion = super::opinion::find(db, input.opinion_id).await?;
+    let opinion = super::opinion::find(db, &input.opinion_id).await?;
 
     let vote = sqlx::query_as!(
         Vote,

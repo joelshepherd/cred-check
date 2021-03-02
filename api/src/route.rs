@@ -24,7 +24,6 @@ pub fn init(db: Db) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rej
             warp::get()
                 .and(with_db(db.clone()))
                 .and(warp::path::tail())
-                .and(warp::query::<handler::source::FindOptions>())
                 .and_then(handler::source::find)
                 .or(warp::post()
                     .and(with_db(db.clone()))
@@ -68,7 +67,7 @@ fn with_db_and_user(
 
 // Separate function because you cannot async closure in stable yet
 async fn map_user(db: Db, token: String) -> Result<(Db, model::user::User), warp::Rejection> {
-    let user = match model::user::find_from_token(&db, token).await {
+    let user = match model::user::find_from_token(&db, &token).await {
         Some(user) => user,
         None => return Err(error::Error::Unauthorised.into()),
     };

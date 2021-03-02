@@ -4,13 +4,10 @@ expression: json_response(res)
 
 ---
 {
+  "canonical_url": "https://www.wikipedia.org/",
+  "id": "[id]",
   "opinions": [],
-  "source": {
-    "canonical_url": "https://www.wikipedia.org/",
-    "created_at": "[created_at]",
-    "id": "[id]",
-    "title": "Wikipedia"
-  },
+  "title": "Wikipedia",
   "votes": [
     0,
     0
