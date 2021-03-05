@@ -81,6 +81,7 @@ async fn map_error(err: warp::Rejection) -> Result<impl warp::Reply, warp::Rejec
     if let Some(err) = err.find::<error::Error>() {
         let status = match err {
             error::Error::Internal => warp::http::status::StatusCode::INTERNAL_SERVER_ERROR,
+            error::Error::Invalid => warp::http::status::StatusCode::BAD_REQUEST,
             error::Error::NotFound => warp::http::status::StatusCode::NOT_FOUND,
             error::Error::Unauthorised => warp::http::status::StatusCode::UNAUTHORIZED,
         };

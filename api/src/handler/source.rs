@@ -1,8 +1,10 @@
 use crate::{error, handler, model, Db};
 use serde::{Deserialize, Serialize};
+use validator::Validate;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Validate)]
 pub struct CreateRequest {
+    #[validate(url)]
     url: String,
 }
 
@@ -43,6 +45,8 @@ pub async fn find(db: Db, url: warp::path::Tail) -> Result<impl warp::Reply, war
 }
 
 pub async fn create(db: Db, input: CreateRequest) -> Result<impl warp::Reply, warp::Rejection> {
+    validate(&input)?;
+
     let input = model::source::CreateSource { url: input.url };
     let source = model::source::create(&db, input).await?;
     let reply = SourceReply::try_from_source(&db, source).await?;
@@ -51,4 +55,8 @@ pub async fn create(db: Db, input: CreateRequest) -> Result<impl warp::Reply, wa
         warp::reply::json(&reply),
         warp::http::status::StatusCode::CREATED,
     ))
+}
+
+fn validate(input: &impl Validate) -> Result<(), error::Error> {
+    input.validate().map_err(|e| error::Error::Invalid)
 }

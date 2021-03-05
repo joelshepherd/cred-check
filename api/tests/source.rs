@@ -78,3 +78,17 @@ async fn test_create_alternative() {
         res_canonical.as_object().unwrap()["id"],
     )
 }
+
+#[tokio::test]
+async fn test_create_invalid_url() {
+    let api = init().await;
+
+    let res = request()
+        .method("POST")
+        .path("/source")
+        .body(r#"{ "url": "not a url" }"#)
+        .reply(&api)
+        .await;
+
+    assert_eq!(res.status(), StatusCode::BAD_REQUEST);
+}

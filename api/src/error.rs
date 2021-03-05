@@ -5,6 +5,7 @@ pub type Result<T> = StdResult<T, Error>;
 #[derive(Debug)]
 pub enum Error {
     Internal,
+    Invalid,
     NotFound,
     Unauthorised,
 }
@@ -17,5 +18,11 @@ impl From<sqlx::Error> for Error {
             sqlx::Error::RowNotFound => Error::NotFound,
             _ => Error::Internal,
         }
+    }
+}
+
+impl From<validator::ValidationErrors> for Error {
+    fn from(_: validator::ValidationErrors) -> Self {
+        Error::Invalid
     }
 }
