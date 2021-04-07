@@ -2,7 +2,7 @@
 
 - [x] additional (redirected) urls for sources
 - [ ] user authentication
-- [ ] input validation
+- [x] input validation
 - [x] order opinions by votes
 - [ ] decay opinion votes over time
 - [ ] permalinks for sources and opinions
