@@ -1,5 +1,6 @@
-export { default as React } from "https://cdn.skypack.dev/react?dts";
-export * as ReactDOM from "https://cdn.skypack.dev/react-dom?dts";
+// Currently incompatible with deno bundle
+export { default as React } from "https://cdn.skypack.dev/react";
+export { default as ReactDOM } from "https://cdn.skypack.dev/react-dom";
 
 export type { Result } from "https://deno.land/x/monads/lib/result/result.deno.ts";
 export { Err, Ok } from "https://deno.land/x/monads/lib/result/result.deno.ts";
