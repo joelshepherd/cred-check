@@ -58,5 +58,5 @@ pub async fn create(db: Db, input: CreateRequest) -> Result<impl warp::Reply, wa
 }
 
 fn validate(input: &impl Validate) -> Result<(), error::Error> {
-    input.validate().map_err(|e| error::Error::Invalid)
+    input.validate().map_err(|_| error::Error::Invalid)
 }

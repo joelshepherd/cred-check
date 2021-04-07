@@ -1,4 +1,4 @@
-# fact-checker/api
+# cred-check/api
 
 ## scripts
 
